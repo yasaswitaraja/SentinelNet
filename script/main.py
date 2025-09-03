@@ -3,7 +3,9 @@ import matplotlib.pyplot as plt
 import os
 
 # output directory creation
-output_dir = "../outputs"
+#output_dir = "../outputs"
+output_dir = "/workspaces/SentinelNet/outputs"
+
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)
 
@@ -93,33 +95,41 @@ print("Current working directory:", os.getcwd())
 
 # CICIDS2017 Dataset
 
-import pandas as pd
-import matplotlib.pyplot as plt
-import os
+cicids_file_path = "/workspaces/SentinelNet/data/CICIDS-2017/Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv"
 
-# CICIDS2017 Dataset 
-cicids_file_path="/workspaces/SentinelNet/data/CICIDS-2017/Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv"
-#cicids_file_path = r"C:/Users/Yasaswita/Downloads/Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv "
 try:
     cicids = pd.read_csv(cicids_file_path)
     print("\nCICIDS2017 Dataset Loaded")
     print("Shape:", cicids.shape)
 
     
-    if "Label" in cicids.columns:
-        print("\nUnique attack types:", cicids["Label"].nunique())
-        print("\nTop 5 frequent attack types:\n", cicids["Label"].value_counts().head())
+    label_col = None
+    for col in cicids.columns:
+        if col.strip().lower() == "label":
+            label_col = col
+            break
 
-        # attack types
-        top_attacks = cicids["Label"].value_counts().head(10)
+    if label_col:
+        print("\nUnique attack types:", cicids[label_col].nunique())
+        print("\nTop 5 frequent attack types:\n", cicids[label_col].value_counts().head())
+
+        # Plot top 10 attacks
+        top_attacks = cicids[label_col].value_counts().head(10)
         plt.figure(figsize=(10,6))
         top_attacks.plot(kind="bar")
         plt.title("Top 10 Attack Types in CICIDS2017 Dataset")
         plt.xlabel("Attack Type")
         plt.ylabel("Count")
         plt.xticks(rotation=90)
-        #plt.show()
-        save_plot("cicids_top10_attack_types.png")
+        save_plot("cicids_top10_attack_types.png")  # <- plot saved here
+
+        
+        total = len(cicids)
+        imbalance = (cicids[label_col].value_counts() / total) * 100
+        print("\nClass Imbalance Check (%):")
+        print(imbalance)
+    else:
+        print("No 'label' column found in CICIDS dataset.")
 
     # Dataset overview
     print("\n--- CICIDS Dataset Overview ---")
@@ -127,18 +137,10 @@ try:
     print(cicids.info())
     print(cicids.describe())
 
-    # Check for missing values
+    # Missing values
     print("\nMissing values per column:")
     print(cicids.isnull().sum())
 
-    
-    if "Label" in cicids.columns:
-        total = len(cicids)
-        imbalance = (cicids["Label"].value_counts() / total) * 100
-        print("\nClass Imbalance Check (%):")
-        print(imbalance)
-
 except FileNotFoundError:
     print(f"CICIDS file not found: {cicids_file_path}")
-
 
