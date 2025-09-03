@@ -1,14 +1,19 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import os
 
-
-# NSL-KDD Dataset
-
+# NSL-KDD dataset
 
 # Load dataset
-df = pd.read_csv("./data/KDDTrain+.txt", header=None)
+kdd_file_path = "./data/NSL-KDD/KDDTrain+.txt"
 
-# Rename columns immediately
+try:
+    df = pd.read_csv(kdd_file_path, header=None, sep=',')
+except FileNotFoundError:
+    print(f"File not found: {kdd_file_path}")
+    exit()
+
+# Rename columns
 columns = [
     'duration','protocol_type','service','flag','src_bytes','dst_bytes','land','wrong_fragment','urgent','hot',
     'num_failed_logins','logged_in','num_compromised','root_shell','su_attempted','num_root','num_file_creations',
@@ -20,25 +25,20 @@ columns = [
 ]
 df.columns = columns
 
-
 print("Number of rows:", len(df))
 print("\nUnique labels in outcome:", df["outcome"].unique())
-
-# Top 5 frequent attack types
 print("\nTop 5 attack types:")
 print(df["outcome"].value_counts().head(5))
 
-# Plot attack distribution
-attack_counts = df["outcome"].value_counts().head(10)
+# attack types
 plt.figure(figsize=(10, 6))
-attack_counts.plot(kind="bar")
+df["outcome"].value_counts().head(10).plot(kind="bar")
 plt.title("Top 10 Attack Types in NSL-KDD Dataset")
 plt.xlabel("Attack Type")
 plt.ylabel("Count")
 plt.xticks(rotation=90)
 plt.show()
 
-# Dataset overview
 print("\n--- Dataset Overview ---")
 print(df.head())
 print(df.info())
@@ -47,7 +47,7 @@ print(df.describe())
 print("\nFeature Types:")
 print(df.dtypes)
 
-# Group attacks into broader categories
+# Map attacks
 attack_mapping = {
     'neptune': 'DoS', 'smurf': 'DoS', 'back': 'DoS', 'teardrop': 'DoS', 'pod': 'DoS',
     'satan': 'Probe', 'ipsweep': 'Probe', 'nmap': 'Probe', 'portsweep': 'Probe',
@@ -61,41 +61,66 @@ df['category'] = df['outcome'].map(attack_mapping).fillna('Other')
 print("\nAttack categories distribution:")
 print(df['category'].value_counts())
 
-# Plot categories
-df['category'].value_counts().plot(kind='bar', figsize=(6,4))
+# Plot attack 
+plt.figure(figsize=(6,4))
+df['category'].value_counts().plot(kind='bar')
 plt.title("Attack Categories in NSL-KDD")
 plt.xlabel("Category")
 plt.ylabel("Count")
 plt.show()
 
-# Class imbalance check
 print("\nClass Imbalance Check (%):")
-total = len(df)
-imbalance = (df['category'].value_counts() / total) * 100
+imbalance = (df['category'].value_counts() / len(df)) * 100
 print(imbalance)
 
+print("Current working directory:", os.getcwd())
 
 
 # CICIDS2017 Dataset
 
+import pandas as pd
+import matplotlib.pyplot as plt
+import os
 
-# Load dataset
-cicids = pd.read_parquet("./data/DoS-Wednesday-no-metadata.parquet")
+# CICIDS2017 Dataset 
+cicids_file_path = r"C:/Users/Yasaswita/Downloads/Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv "
+try:
+    cicids = pd.read_csv(cicids_file_path)
+    print("\nCICIDS2017 Dataset Loaded")
+    print("Shape:", cicids.shape)
 
-print("\nCICIDS2017 Dataset Loaded")
-print("Shape:", cicids.shape)
+    
+    if "Label" in cicids.columns:
+        print("\nUnique attack types:", cicids["Label"].nunique())
+        print("\nTop 5 frequent attack types:\n", cicids["Label"].value_counts().head())
 
-if "Label" in cicids.columns:
-    print("\nUnique attack types:", cicids["Label"].nunique())
-    print("\nTop 5 frequent attack types:\n", cicids["Label"].value_counts().head())
+        # attack types
+        top_attacks = cicids["Label"].value_counts().head(10)
+        plt.figure(figsize=(10,6))
+        top_attacks.plot(kind="bar")
+        plt.title("Top 10 Attack Types in CICIDS2017 Dataset")
+        plt.xlabel("Attack Type")
+        plt.ylabel("Count")
+        plt.xticks(rotation=90)
+        plt.show()
 
-    cicids["Label"].value_counts().plot(kind="bar", figsize=(8,5))
-    plt.title("CICIDS2017 Attack Type Distribution")
-    plt.xlabel("Attack Type")
-    plt.ylabel("Count")
-    plt.show()
+    # Dataset overview
+    print("\n--- CICIDS Dataset Overview ---")
+    print(cicids.head())
+    print(cicids.info())
+    print(cicids.describe())
 
-print("\n--- CICIDS Dataset Overview ---")
-print(cicids.head())
-print(cicids.info())
-print(cicids.describe())
+    # Check for missing values
+    print("\nMissing values per column:")
+    print(cicids.isnull().sum())
+
+    
+    if "Label" in cicids.columns:
+        total = len(cicids)
+        imbalance = (cicids["Label"].value_counts() / total) * 100
+        print("\nClass Imbalance Check (%):")
+        print(imbalance)
+
+except FileNotFoundError:
+    print(f"CICIDS file not found: {cicids_file_path}")
+
