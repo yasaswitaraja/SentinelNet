@@ -142,4 +142,3 @@ except FileNotFoundError:
     print(f"CICIDS file not found: {cicids_file_path}")
 
 
-output_dir = "../outputs"  # relative to script directory
