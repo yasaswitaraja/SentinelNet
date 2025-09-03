@@ -2,10 +2,23 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import os
 
+# output directory creation
+#output_dir = "./output"
+output_dir="/workspaces/SentinelNet/outputs"
+if not os.path.exists(output_dir):
+    os.makedirs(output_dir)
+
+# --- Function to save plots ---
+def save_plot(fig_name):
+    plt.savefig(os.path.join(output_dir, fig_name), bbox_inches='tight')
+    plt.show()
+    plt.close()
+
 # NSL-KDD dataset
 
 # Load dataset
-kdd_file_path = "./data/NSL-KDD/KDDTrain+.txt"
+#kdd_file_path = "./data/NSL-KDD/KDDTrain+.txt"
+kdd_file_path="/workspaces/SentinelNet/data/NSL-KDD/KDDTrain+.txt"
 
 try:
     df = pd.read_csv(kdd_file_path, header=None, sep=',')
@@ -83,7 +96,8 @@ import matplotlib.pyplot as plt
 import os
 
 # CICIDS2017 Dataset 
-cicids_file_path = r"C:/Users/Yasaswita/Downloads/Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv "
+cicids_file_path="/workspaces/SentinelNet/data/CICIDS-2017/Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv"
+#cicids_file_path = r"C:/Users/Yasaswita/Downloads/Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv "
 try:
     cicids = pd.read_csv(cicids_file_path)
     print("\nCICIDS2017 Dataset Loaded")
@@ -124,3 +138,5 @@ try:
 except FileNotFoundError:
     print(f"CICIDS file not found: {cicids_file_path}")
 
+
+output_dir = "../outputs"  # relative to script directory
