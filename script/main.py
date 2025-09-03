@@ -3,8 +3,7 @@ import matplotlib.pyplot as plt
 import os
 
 # output directory creation
-#output_dir = "./output"
-output_dir="/workspaces/SentinelNet/outputs"
+output_dir = "../outputs"
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)
 
@@ -50,7 +49,9 @@ plt.title("Top 10 Attack Types in NSL-KDD Dataset")
 plt.xlabel("Attack Type")
 plt.ylabel("Count")
 plt.xticks(rotation=90)
-plt.show()
+#plt.show()
+save_plot("kdd_attack_types.png")
+
 
 print("\n--- Dataset Overview ---")
 print(df.head())
@@ -80,7 +81,8 @@ df['category'].value_counts().plot(kind='bar')
 plt.title("Attack Categories in NSL-KDD")
 plt.xlabel("Category")
 plt.ylabel("Count")
-plt.show()
+#plt.show()
+save_plot("kdd_attack_categories.png")
 
 print("\nClass Imbalance Check (%):")
 imbalance = (df['category'].value_counts() / len(df)) * 100
@@ -116,7 +118,8 @@ try:
         plt.xlabel("Attack Type")
         plt.ylabel("Count")
         plt.xticks(rotation=90)
-        plt.show()
+        #plt.show()
+        save_plot("cicids_top10_attack_types.png")
 
     # Dataset overview
     print("\n--- CICIDS Dataset Overview ---")
