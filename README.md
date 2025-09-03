@@ -7,25 +7,5 @@ NSL-KDD – A classic network intrusion detection dataset with labels for attack
 
 CICIDS2017 – A modern network dataset with real traffic captured over an afternoon, including multiple attack types like DDoS, PortScan, and more.
 
-Project Structure
-
-SentinelNet/
-├── data/                         # Folder for raw datasets
-│   ├── NSL-KDD/
-│   │   └─ KDDTrain+.txt
-│   └── CICIDS-2017/
-│       └─ Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv
-├── script/                       # Python scripts for analysis
-│   └─ main.py                     # Loads datasets, processes data, generates plots
-├── outputs/                      # Generated outputs
-│   ├─ kdd_attack_types.png
-│   ├─ kdd_attack_categories.png
-│   └─ cicids_top10_attack_types.png
-├── notebooks/                     # Optional notebooks for exploration
-│   └─ load_and_explore.ipynb
-├── requirements.txt               # Required Python packages
-└── README.md                      # Project overview and instructions
-
-
 Run the main script:
 '''python scripts/main.py'''
